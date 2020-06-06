@@ -35,18 +35,30 @@ class JsonOperations(GenericAPIView):
 
 class JsonUpdate(GenericAPIView):
     def put(self,request,id):
+        url = "https://jsonplaceholder.typicode.com/posts/1/comments"
+        json_url = urlopen(url)
+        data = json.loads(json_url.read())
+        print(data)
+
+        with open('EmployeeData.json','w+') as f:
+            json.dump(data,f,indent=4)
 
         name = request.data['name']
         email = request.data['email']
         body = request.data['body']
-
+        print("request : ",request.data)
+        print("rtype :",type(request.data))
+        request_data = request.data.copy()
+        print(request_data)
+        print(type(request_data))
         with open('EmployeeData.json') as json_file:
             data = json.load(json_file)
             for i in range(len(data)):
                 if str(data[i]['id']) == id:
-                    data[i]['name'] = name
-                    data[i]['email']=email
-                    data[i]['body']=body
+                    data[i].update(request_data)
+                    #data[i]['name'] = name
+                    #data[i]['email']=email
+                    #data[i]['body']=body
                     break
             print(data)
 
@@ -57,6 +69,15 @@ class JsonUpdate(GenericAPIView):
 
 
     def delete(self,request,id):
+
+        url = "https://jsonplaceholder.typicode.com/posts/1/comments"
+        json_url = urlopen(url)
+        data = json.loads(json_url.read())
+        print(data)
+
+        with open('EmployeeData.json', 'w+') as f:
+            json.dump(data, f, indent=4)
+
         with open('EmployeeData.json') as json_file:
             data = json.load(json_file)
             for i in range(len(data)):
